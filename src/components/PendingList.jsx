@@ -38,7 +38,7 @@ function PendingList({ pendingList, fetchTasks }) {
     const moveToProgress = async (id) => {
         try {
             // Send a patch request to update the task's status to in-progress
-             await axios.patch(`https://dynamic-to-do-server.onrender.com/${id}`, { 
+             await axios.patch(`https://dynamic-to-do-server.onrender.com/tasks/${id}`, { 
                 isPending: false,
                 isProgress: true,
                 isCompleted: false
