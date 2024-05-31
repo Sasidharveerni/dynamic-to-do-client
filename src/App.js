@@ -8,9 +8,9 @@ import axios from 'axios';
 
 function App() {
 
-const [pendingList, setPendingList] = useState([]);
-const [progressList, setProgressList] = useState([]);
-const [completedList, setCompletedList] = useState([]);
+const [pendingList, setPendingList] = useState([]); // For all pending tasks we can store in the state handler and iterate in PendingTask Section
+const [progressList, setProgressList] = useState([]); // For all ongoing tasks we can store in the progress state handler and iterate in ProgressTask Section
+const [completedList, setCompletedList] = useState([]); // For all completed tasks we can store in the completedList state handler and iterate in completedList Section
 
 useEffect(() => {
     fetchTasks();
@@ -19,11 +19,11 @@ useEffect(() => {
 const fetchTasks = async () => {
   try {
       
-      const response = await axios.get('https://dynamic-to-do-server.onrender.com/tasks');
-      const tasks = response.data.data;
+      const response = await axios.get('https://dynamic-to-do-server.onrender.com/tasks'); // We fetch the data from backend by using axios.get() method.
+      const tasks = response.data.data;     
 
-      const pending = tasks.filter(task => task.isPending);
-      const progress = tasks.filter(task => task.isProgress);
+      const pending = tasks.filter(task => task.isPending);  
+      const progress = tasks.filter(task => task.isProgress);    // We divide the tasks into 3 sections : Pending, Progress, Completed based on the response of backend server we store them respectively.
       const completed = tasks.filter(task => task.isCompleted);
 
       setPendingList(pending);
@@ -44,7 +44,7 @@ const fetchTasks = async () => {
     <div style={{ display: 'flex' }}>
       <div className='pending-section'>
         <PendingList
-          pendingList={pendingList}
+          pendingList={pendingList}         // We will send the state-handlers as props to iterate and display the data.
           fetchTasks={fetchTasks}
         />
       </div>

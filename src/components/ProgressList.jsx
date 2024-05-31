@@ -1,9 +1,11 @@
 import axios from "axios";
+import Loader from "./Loader";
+import { useState } from "react";
 
 
 function ProgressList({ progressList, fetchTasks }) {
 
-
+  const [loading, setLoading] = useState(false); // Loader state
   const getFormattedTimestamp = () => {
     const now = new Date();
     const day = String(now.getDate()).padStart(2, '0');
@@ -11,18 +13,19 @@ function ProgressList({ progressList, fetchTasks }) {
     const year = now.getFullYear();
     const hours = String(now.getHours()).padStart(2, '0');
     const minutes = String(now.getMinutes()).padStart(2, '0');
-    return `${day}/${month}/${year}, ${hours}:${minutes}`;
+    return `${day}/${month}/${year}, ${hours}:${minutes}`;  // We return the time string in the given format
   };
 
 
   const moveToComplete = async (id) => {
+    setLoading(true);
     try {
 
       // Update the backend
       await axios.patch(`https://dynamic-to-do-server.onrender.com/tasks/${id}`, {
         isCompleted: true,
         isProgress: false,
-        timestamp: getFormattedTimestamp()
+        timestamp: getFormattedTimestamp() // Add time stamp
       });
 
 
@@ -30,15 +33,18 @@ function ProgressList({ progressList, fetchTasks }) {
       console.error('Error updating task:', error.response?.data || error.message);
     }
 
+    setLoading(false);
     fetchTasks();
   };
 
   const deleteTask = async (id) => {
+    setLoading(true);
     try {
       await axios.delete(`https://dynamic-to-do-server.onrender.com/tasks/${id}`)
     } catch (error) {
       console.error('Error updating task:', error);
     }
+    setLoading(false);
     fetchTasks();
   }
 
@@ -48,6 +54,7 @@ function ProgressList({ progressList, fetchTasks }) {
     progressList &&
     <div className='pending-todo'>
       <p>IN PROGRESS {progressList.length} ISSUES</p>
+      {loading && <Loader />}
       {progressList.map((task, ind) => (
         task.title &&
         <div className="to-do-box" key={task.id}>

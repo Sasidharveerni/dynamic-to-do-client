@@ -1,22 +1,27 @@
 import axios from 'axios';
-import React from 'react'
+import React, { useState } from 'react'
+import Loader from './Loader';
 
 function CompletedList({ completedList, fetchTasks }) {
+
+  const [loading, setLoading] = useState(false); // Loader state
   const deleteTask = async (id) => {
+    setLoading(true);
     try {
       await axios.delete(`https://dynamic-to-do-server.onrender.com/tasks/${id}`)
     } catch (error) {
       console.error('Error updating task:', error);
     }
+    setLoading(false);
     fetchTasks();
   }
 
   return (
     <div className='pending-todo'>
       <p>DONE ✔️</p>
-      {completedList && completedList.map((task, ind) => (
-        task.title &&
 
+      {loading && <Loader />}
+      {completedList && completedList.map((task, ind) => (
         <div className="to-do-box" key={task.id}>
           <button style={{
             background: 'none',

@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import Modal from './Modal';
 import axios from 'axios';
+import Loader from './Loader';
 
 function PendingList({ pendingList, fetchTasks }) {
     const [note, setNote] = useState({
@@ -11,6 +12,9 @@ function PendingList({ pendingList, fetchTasks }) {
     });
 
     const [showModal, setShowModal] = useState(false);
+
+    const [loading, setLoading] = useState(false); // Loader state
+
    
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -22,20 +26,24 @@ function PendingList({ pendingList, fetchTasks }) {
             isCompleted: false,
             isProgress: false
         };
+
+        setLoading(true);
     
         try {
-           await axios.post('https://dynamic-to-do-server.onrender.com/tasks', newTask);
+           await axios.post('https://dynamic-to-do-server.onrender.com/tasks', newTask);  // We post it to the backend by using axios.post() method so for newly created tasks we sent the data to our MongoDataBase and store them.
            setNote({...note, title: '', description: ''})
             
         } catch (error) {
             console.error('Error creating task:', error);
         }
+        setLoading(false);
         setShowModal(false);
-        fetchTasks();
+        fetchTasks(); // By calling fetchTasks() function we update the data each time for each change.
     };
 
 
     const moveToProgress = async (id) => {
+        setLoading(true);
         try {
             // Send a patch request to update the task's status to in-progress
              await axios.patch(`https://dynamic-to-do-server.onrender.com/tasks/${id}`, { 
@@ -48,13 +56,14 @@ function PendingList({ pendingList, fetchTasks }) {
         } catch (error) {
             console.error('Error updating task:', error);
         }
+        setLoading(false)
         fetchTasks();
     };
     
 
     const deleteTask = async (id) => {
         try {
-            await axios.delete(`https://dynamic-to-do-server.onrender.com/tasks/${id}`)
+            await axios.delete(`https://dynamic-to-do-server.onrender.com/tasks/${id}`) // We delete the task in our database, If User clicks on delete icon.
         } catch (error) {
             console.error('Error updating task:', error);
         }
@@ -65,7 +74,7 @@ function PendingList({ pendingList, fetchTasks }) {
     return (
         <div className='pending-todo'>
             <p>TO DO {pendingList.length} ISSUES</p>
-
+            {loading && <Loader />} {/* We added the loader for usabality of the website so if any action performed by user, since actions are asynchronous. we can show loader meanwhile */}
             {pendingList &&
                 pendingList.map((task, ind) => (
                     <div className="to-do-box" key={ind}>
@@ -123,7 +132,7 @@ function PendingList({ pendingList, fetchTasks }) {
                         style={{ marginBottom: '1rem' }}
                         value={note.description}
                     />
-                    <button type="submit" style={{ backgroundColor: '#292929', border: '2px solid #292929', color: '#fff', width: '6rem' }}>Create issue</button>
+                    <button type="submit" style={{ backgroundColor: '#292929', border: '2px solid #292929', color: '#fff', width: '6rem', cursor: 'pointer' }}>Create issue</button>
                 </form>
             </Modal>
         </div>
