@@ -4,7 +4,7 @@ import React from 'react'
 function CompletedList({ completedList, fetchTasks }) {
   const deleteTask = async (id) => {
     try {
-      await axios.delete(`http://localhost:5000/tasks/${id}`)
+      await axios.delete(`https://dynamic-to-do-server.onrender.com/tasks/${id}`)
     } catch (error) {
       console.error('Error updating task:', error);
     }

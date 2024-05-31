@@ -19,7 +19,7 @@ useEffect(() => {
 const fetchTasks = async () => {
   try {
       
-      const response = await axios.get('http://localhost:5000/tasks');
+      const response = await axios.get('https://dynamic-to-do-server.onrender.com/tasks');
       const tasks = response.data.data;
 
       const pending = tasks.filter(task => task.isPending);

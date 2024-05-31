@@ -24,7 +24,7 @@ function PendingList({ pendingList, fetchTasks }) {
         };
     
         try {
-           await axios.post('http://localhost:5000/tasks', newTask);
+           await axios.post('https://dynamic-to-do-server.onrender.com/tasks', newTask);
            setNote({...note, title: '', description: ''})
             
         } catch (error) {
@@ -38,7 +38,7 @@ function PendingList({ pendingList, fetchTasks }) {
     const moveToProgress = async (id) => {
         try {
             // Send a patch request to update the task's status to in-progress
-             await axios.patch(`http://localhost:5000/tasks/${id}`, { 
+             await axios.patch(`https://dynamic-to-do-server.onrender.com/${id}`, { 
                 isPending: false,
                 isProgress: true,
                 isCompleted: false
@@ -54,7 +54,7 @@ function PendingList({ pendingList, fetchTasks }) {
 
     const deleteTask = async (id) => {
         try {
-            await axios.delete(`http://localhost:5000/tasks/${id}`)
+            await axios.delete(`https://dynamic-to-do-server.onrender.com/tasks/${id}`)
         } catch (error) {
             console.error('Error updating task:', error);
         }
